@@ -16,7 +16,7 @@ services:
     image: mydockerhub/myapp:latest
     container_name: myapp
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://cicd-mysqlDB:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root1234
     ports:
