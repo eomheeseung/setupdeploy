@@ -29,20 +29,29 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Docker login to Docker Hub
+      - name: Docker login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}   # Docker Hub 사용자명
+          password: ${{ secrets.DOCKER_PASSWORD }}   # Docker Hub 비밀번호
+
+      # Build Docker image
+      - name: Build Docker Image
         run: mvn clean install -DskipTests
 
-      - name: Docker login to Docker Hub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build Docker Image
-        run: docker build -t eomhseeseung/cicdmyapp:latest .
-
+      # Push Docker image to Docker Hub
       - name: Push Docker Image to Docker Hub
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push eomhseeseung/cicdmyapp:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/cicdmyapp:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/cicdmyapp:latest
+
+
+
 
 #      - name: Deploy to Docker
 #        run: |
