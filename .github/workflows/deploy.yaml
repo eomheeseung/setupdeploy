@@ -32,6 +32,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
+      - name: Docker login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
       - name: Build Docker Image
         run: docker build -t eomhseeseung/cicdmyapp:latest .
 
@@ -40,16 +44,16 @@ jobs:
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker push eomhseeseung/cicdmyapp:latest
 
-      - name: Deploy to Docker
-        run: |
-          docker pull eomheeseung/cicdmyapp:latest
-          docker stop cicdmyapp || true
-          docker rm cicdmyapp || true
-          docker run -d --name cicdmyapp -p 8080:8080 \
-            -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
-            -e SPRING_DATASOURCE_USERNAME=root \
-            -e SPRING_DATASOURCE_PASSWORD=root1234 \
-            eomheeseung/cicdmyapp:latest
+#      - name: Deploy to Docker
+#        run: |
+#          docker pull eomheeseung/cicdmyapp:latest
+#          docker stop cicdmyapp || true
+#          docker rm cicdmyapp || true
+#          docker run -d --name cicdmyapp -p 8080:8080 \
+#            -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
+#            -e SPRING_DATASOURCE_USERNAME=root \
+#            -e SPRING_DATASOURCE_PASSWORD=root1234 \
+#            eomheeseung/cicdmyapp:latest
 
 
-      
+
