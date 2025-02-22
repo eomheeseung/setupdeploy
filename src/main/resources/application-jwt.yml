@@ -1,0 +1,4 @@
+jwt:
+  issuer: heeseung
+  expired-time: 6000
+  secret-key: secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey
