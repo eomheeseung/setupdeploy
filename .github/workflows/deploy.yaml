@@ -43,11 +43,14 @@ jobs:
 
       - name: Deploy to Docker
         run: |
-          docker pull mydockerhub/myapp:latest
-          docker stop myapp || true
-          docker rm myapp || true
-          docker run -d --name myapp -p 8080:8080 \
+          docker pull eomheeseung/cicdmyapp:latest
+          docker stop cicdmyapp || true
+          docker rm cicdmyapp || true
+          docker run -d --name cicdmyapp -p 8080:8080 \
             -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
             -e SPRING_DATASOURCE_USERNAME=root \
             -e SPRING_DATASOURCE_PASSWORD=root1234 \
-            mydockerhub/myapp:latest
+            eomheeseung/cicdmyapp:latest
+
+
+      
