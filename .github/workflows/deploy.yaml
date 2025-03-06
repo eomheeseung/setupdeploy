@@ -9,6 +9,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      profiles: prod
+
     services:
       mysql:
         image: mysql:8
