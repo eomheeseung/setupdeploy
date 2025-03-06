@@ -41,6 +41,8 @@ public class UserServiceImpl implements UserService{
         // SecurityContext에서 인증된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+
+
         // Authentication 객체에서 username을 가져오기
         String username = (String) authentication.getPrincipal();
 

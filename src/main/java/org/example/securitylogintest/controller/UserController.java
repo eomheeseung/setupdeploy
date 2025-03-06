@@ -6,30 +6,60 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.securitylogintest.jpa.UserService;
 import org.example.securitylogintest.vo.RequestUserDto;
 import org.example.securitylogintest.vo.ResponseUserDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/signUp")
-    public ResponseEntity<ResponseUserDto> signUp(@RequestBody RequestUserDto requestUserDto) {
-        ResponseUserDto result = userService.createUser(requestUserDto);
+    @GetMapping("/signup")
+    public String signupForm(Model model) {
+        RequestUserDto defaultUserDto = new RequestUserDto("abcd@naver.com","1234","user1");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        model.addAttribute("signupRequest",defaultUserDto );
+        return "signup";  // /WEB-INF/jsp/signup.jsp로 렌더링
     }
 
-    @PostMapping("/info")
-    public ResponseEntity<ResponseUserDto> userInfo(HttpServletRequest request) {
+    @PostMapping("/signup")
+    public String handleSignUp(@ModelAttribute("signupRequest") RequestUserDto requestUserDto) {
+        // 회원가입 로직을 처리합니다.
+        // 예를 들어, 사용자 정보를 DB에 저장하고, 로그인 페이지로 리다이렉트합니다.
 
-        ResponseUserDto result = userService.info();
+        // 회원가입 완료 후 로그인 페이지로 리다이렉트
+        userService.createUser(requestUserDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return "redirect:/signin";  // /signin 경로로 리다이렉트
+    }
+
+    @GetMapping("/signin")
+    public String signIn(Model model) {
+        RequestUserDto user1 = new RequestUserDto();
+        user1.setEmail("abcd@naver.com");
+        user1.setPassword("1234");
+        model.addAttribute("signinRequest", user1);
+
+        return "signin";
+    }
+
+    @GetMapping("/home")
+    public String home(HttpServletRequest request, Model model) {
+        ResponseUserDto userInfo = userService.info();
+
+        if (userInfo != null) {
+            // 모델에 사용자 정보 추가
+            model.addAttribute("user", userInfo);
+        } else {
+            // 인증되지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/login";
+        }
+        // home.jsp로 사용자 정보 전달
+        return "home";  // home.jsp를 리턴
     }
 }
+

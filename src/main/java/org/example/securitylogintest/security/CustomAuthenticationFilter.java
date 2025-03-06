@@ -7,13 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.securitylogintest.jwt.JwtTokenProvider;
-import org.example.securitylogintest.vo.RequestUserDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -28,18 +25,18 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
+        //            RequestUserDto credentials
+//                    = new ObjectMapper().readValue(request.getInputStream(), RequestUserDto.class);
 
-        try {
-            RequestUserDto credentials
-                    = new ObjectMapper().readValue(request.getInputStream(), RequestUserDto.class);
+//            UsernamePasswordAuthenticationToken authenticationToken
+//                    = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
 
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
 
-            return authenticationManager.authenticate(authenticationToken);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(request.getParameter("email"),
+                request.getParameter("password"));
+
+        return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
@@ -47,27 +44,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        // 인증 성공 시 사용자 정보를 가져옴
-        User user = (User) authResult.getPrincipal();
+        CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler =
+                new CustomAuthenticationSuccessHandler(jwtTokenProvider);
 
-        // JWT 생성
-        String token = jwtTokenProvider.createToken(user.getUsername());
-
-        response.addHeader("Authorization", "Bearer " + token);
-
-        SecurityContextHolder.getContext().setAuthentication(authResult);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        HashMap<Object, Object> responseMap = new HashMap<>();
-        responseMap.put("email", user.getUsername());
-
-
-        String result = objectMapper.writeValueAsString(responseMap);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setHeader("content-type", "application/json");
-        response.getWriter().write(result);
+        customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
     @Override

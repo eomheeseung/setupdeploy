@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -40,20 +41,27 @@ public class SecurityConfig {
         CustomAuthenticationFilter customAuthenticationFilter
                 = new CustomAuthenticationFilter(jwtTokenProvider, authenticationManager());
 
-        customAuthenticationFilter.setFilterProcessesUrl("/signIn");
+        customAuthenticationFilter.setFilterProcessesUrl("/login");
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> {
-                    customizer.requestMatchers("/info").authenticated();
-                    customizer.requestMatchers("/signUp", "/signIn", "/h2-console/**").permitAll();
+                    customizer.requestMatchers("/home").authenticated();
+                    customizer.requestMatchers("/signup", "/signup/**",
+                            "/signin", "/signin/**", "/favicon.ico/**",
+                            "/h2-console/**", "/WEB-INF/jsp/**",
+                            "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll();
                 })
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+//                .formLogin(customizer -> customizer.loginPage("/login"))
                 .userDetailsService(userDetailsService)
                 // JWT 필터를 인증 필터보다 먼저 실행하도록 설정
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터가 먼저 실행되도록
                 .addFilter(customAuthenticationFilter) // 인증 필터 두 번째로 추가
+
+                // jstl
+                .sessionManagement(configurator -> configurator.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .build();
     }
 

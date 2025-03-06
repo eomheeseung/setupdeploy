@@ -23,6 +23,11 @@ spring:
   profiles:
     active: jwt, mysql
 
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
 logging:
   level:
     org.springframework.security: debug

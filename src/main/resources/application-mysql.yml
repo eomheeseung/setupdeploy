@@ -1,7 +1,10 @@
 spring:
   datasource:
 #    url: jdbc:mysql://192.168.0.21:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    url: jdbc:mysql://cicd-mysqlDB:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://192.168.0.65:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+
+#    deploy
+#    url: jdbc:mysql://cicd-mysqlDB:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: root1234
     driver-class-name: com.mysql.cj.jdbc.Driver
