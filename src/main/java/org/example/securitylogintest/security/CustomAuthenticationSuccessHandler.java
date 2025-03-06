@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.securitylogintest.jwt.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -27,17 +29,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         User user = (User) authentication.getPrincipal();
 
         // JWT 생성
-        String token = jwtTokenProvider.createToken(user.getUsername());
-
-        // JWT를 HttpOnly 쿠키에 저장 (XSS 보호)
-        Cookie jwtCookie = new Cookie("Authorization", "Bearer " + token);
+        String token = jwtTokenProvider.createToken(user.getUsername()).trim();
+        Cookie jwtCookie = new Cookie("Authorization", token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(60 * 60); // 1시간
         response.addCookie(jwtCookie);
 
+        log.info("Cookie Set: " + jwtCookie.getName() + "=" + jwtCookie.getValue());
 
-        response.addCookie(jwtCookie);
 
         // /home으로 리다이렉트
         response.sendRedirect("/home");

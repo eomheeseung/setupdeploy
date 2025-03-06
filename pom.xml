@@ -54,23 +54,38 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- JSP를 사용하기 위한 의존성 -->
+
+        <!-- Spring Form 태그 라이브러리 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <!-- jsp 관련 -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
+            <version>10.1.4</version> <!-- Jakarta 버전에 맞는 최신 버전 -->
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
+        <!-- Jakarta JSTL API 및 구현 -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <version>3.0.0</version>
         </dependency>
 
-        <!-- Spring Form 태그 라이브러리 -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version> <!-- Jakarta Servlet API -->
+            <scope>provided</scope>
         </dependency>
 
 
@@ -79,6 +94,7 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>
@@ -101,8 +117,6 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.3.0</version>
         </dependency>
-
-
 
 
         <dependency>

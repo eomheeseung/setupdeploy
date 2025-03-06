@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -20,9 +22,9 @@ public class UserController {
 
     @GetMapping("/signup")
     public String signupForm(Model model) {
-        RequestUserDto defaultUserDto = new RequestUserDto("abcd@naver.com","1234","user1");
+        RequestUserDto defaultUserDto = new RequestUserDto("abcd@naver.com", "1234", "user1");
 
-        model.addAttribute("signupRequest",defaultUserDto );
+        model.addAttribute("signupRequest", defaultUserDto);
         return "signup";  // /WEB-INF/jsp/signup.jsp로 렌더링
     }
 
@@ -51,9 +53,17 @@ public class UserController {
     public String home(HttpServletRequest request, Model model) {
         ResponseUserDto userInfo = userService.info();
 
+        // Optional로 감싸기
+        Optional<Object> optional = Optional.ofNullable(userInfo);
+
+        // 값이 존재하면 true, null이면 false를 String으로 출력
+        log.info("Value present: {}", optional.isPresent() ? "true" : "null");
+
+
         if (userInfo != null) {
             // 모델에 사용자 정보 추가
             model.addAttribute("user", userInfo);
+            log.info("userInfo:{}",userInfo.getName());
         } else {
             // 인증되지 않은 경우 로그인 페이지로 리다이렉트
             return "redirect:/login";
