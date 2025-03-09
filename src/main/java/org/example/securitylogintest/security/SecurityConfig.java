@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> {
                     customizer.requestMatchers("/info").authenticated();
-                    customizer.requestMatchers("/signUp", "/signIn", "/h2-console/**").permitAll();
+                    customizer.requestMatchers("/signUp", "/signIn", "/h2-console/**","/eureka/**").permitAll();
                 })
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .userDetailsService(userDetailsService)

@@ -20,9 +20,14 @@ spring:
 #    username: sa
 #    password:
 
+  application:
+    name: user-service
+
+
   profiles:
-    active: jwt, dev
+    active: jwt, dev, client
 
 logging:
   level:
     org.springframework.security: debug
+
