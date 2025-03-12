@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ORDER-SERVICE
+
+
+
+
+  profiles:
+    active: mysql
+
+
+logging:
+  level:
+    org.springframework.security: debug
+    sql: debug
