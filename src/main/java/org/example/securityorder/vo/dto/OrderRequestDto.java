@@ -1,5 +1,6 @@
 package org.example.securityorder.vo.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,4 +21,7 @@ public class OrderRequestDto {
     private Integer price;
 
     private String productId;
+
+    public OrderRequestDto() {
+    }
 }

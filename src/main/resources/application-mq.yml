@@ -1,0 +1,14 @@
+rabbitmq:
+  queue:
+    name: test.queue
+  exchange:
+    name: order.exchange
+  routing:
+    key: order.routingKey
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

@@ -1,0 +1,24 @@
+version: "3.8"
+
+
+# 다른 프로젝트(외부)에서 사용할 수 있도록 설정
+networks:
+  my-external-network:  # 공통 네트워크 설정
+    external: true  # 외부 네트워크로 사용하도록 지정
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+#  $docker network create my-external-network network 생성
+#  $docker network ls 로 확인 가능
+    networks:
+      - my-external-network # 공통 네트워크에 포함

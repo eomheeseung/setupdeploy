@@ -2,14 +2,25 @@ spring:
   application:
     name: ORDER-SERVICE
 
-
-
-
   profiles:
-    active: mysql
+    active: mysql, client, mq
+
+
 
 
 logging:
   level:
     org.springframework.security: debug
     sql: debug
+    org.springframework.amqp: DEBUG  # RabbitMQ 관련 로그 레벨 설정
+
+
+
+# TODO 이런 구조로 만들기
+#  /github.com/my-org/
+#  ├── user-service/   # MSA 서비스1 (독립적인 Git Repo)
+#  ├── order-service/  # MSA 서비스2 (독립적인 Git Repo)
+#  ├── infra/          # 공통 인프라 Repo (RabbitMQ, MySQL, Redis 등)
+#  │   ├── docker-compose-mq.yml  ✅
+#  │   ├── docker-compose-db.yml  ✅
+#  │   ├── docker-compose-redis.yml ✅

@@ -4,13 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
 @Configuration
-
 /**
  *  model mapper 작동 x
  */

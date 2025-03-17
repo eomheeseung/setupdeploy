@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.securityorder.model.service.OrderService;
 import org.example.securityorder.model.service.OrderServiceImpl;
+import org.example.securityorder.mq.OrderProducer;
 import org.example.securityorder.vo.dto.OrderRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -19,12 +20,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/order")
 @Slf4j
 public class OrderController {
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    private OrderService orderService;
+    private final OrderProducer orderProducer;
 
-    private final OrderService orderService;
+    @Autowired
+    public OrderController(OrderService orderService, OrderProducer orderProducer) {
+        this.orderService = orderService;
+        this.orderProducer = orderProducer;
+    }
 
     @GetMapping("/view")
     public ResponseEntity<Object> viewOrders(HttpRequest request) {
@@ -36,6 +39,10 @@ public class OrderController {
         log.info("controller -> dto value:{}", dto.getUserId());
         log.info("controller -> dto getPrice:{}", dto.getPrice());
         log.info("controller -> dto getQuantity:{}", dto.getQuantity());
+
+        orderProducer.sendOrder(dto);
+
         return ResponseEntity.ok().body(orderService.createOrder(dto));
     }
+
 }

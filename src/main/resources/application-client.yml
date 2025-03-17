@@ -1,0 +1,10 @@
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+  instance:
+#    spring.application.name : ip-address로 인스턴스의 이름이 유레카에 등록됨
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}
