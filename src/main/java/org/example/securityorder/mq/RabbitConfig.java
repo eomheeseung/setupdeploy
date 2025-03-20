@@ -24,17 +24,20 @@ public class RabbitConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-
-        // Jackson2JsonMessageConverter를 설정하여 JSON 직렬화
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter()); // JSON 변환기 설정
 
         return rabbitTemplate;
     }
 
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
 
     @Bean
-    public Queue orderQueue() {
-        return new Queue(orderQueue, true);  // Durable 큐
+    public Queue orderQueue(@Value("${rabbitmq.queue.name}") String orderQueueName) {
+        return new Queue(orderQueueName, true);
     }
 
     @Bean

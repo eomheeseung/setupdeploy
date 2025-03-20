@@ -2,9 +2,9 @@ rabbitmq:
   queue:
     name: test.queue
   exchange:
-    name: order.exchange
+    name: test.exchange
   routing:
-    key: order.routingKey
+    key: test.routingKey
 
 spring:
   rabbitmq:

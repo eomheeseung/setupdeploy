@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 
 @Setter
 @Getter
-public class OrderRequestDto {
+public class OrderRequestDto implements Serializable {
     private String userId;
     private String address;
 
