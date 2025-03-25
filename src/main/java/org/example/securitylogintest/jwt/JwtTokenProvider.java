@@ -7,7 +7,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,17 +17,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Configuration
-@ConfigurationProperties(prefix = "jwt")
 public class JwtTokenProvider {
 
-    @Value("${jwt.issuer}")
-    private String issuer;
+    private final String issuer;
 
-    @Value("${jwt.expired-time}")
-    private long expiredTime;
+    private final long expiredTime;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+    private final String secretKey;
+
+    public JwtTokenProvider(@Value("${jwt.issuer}") String issuer,
+                            @Value("${jwt.expired-time}") long expiredTime,
+                            @Value("${jwt.secret-key}") String secretKey) {
+        this.issuer = issuer;
+        this.expiredTime = expiredTime;
+        this.secretKey = secretKey;
+    }
 
     public String createToken(String username) {
         return JWT
