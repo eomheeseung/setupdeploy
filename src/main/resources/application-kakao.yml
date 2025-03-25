@@ -5,11 +5,13 @@ security:
         kakao:  # OAuth2 공급자 이름 (카카오 예시)
           client-id: 1970a8420b6011c0ee50915ef06513c7
           client-secret: 6Zah6PAFco6Jm7SUBW1oTamoOI5S276f
-          scope: profile
-          redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
+          scope:
+            - profile_nickname
+            - profile_image
+          redirect-uri: http://localhost:8080/login/oauth2/code/kakao
           authorization-grant-type: authorization_code
           client-name: Kakao
-          client-authentication-method: basic
+          client-authentication-method: post
       provider:
         kakao:
           authorization-uri: https://kauth.kakao.com/oauth/authorize

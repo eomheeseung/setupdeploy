@@ -67,11 +67,11 @@ public class SecurityConfig {
                             "/swagger-ui/**",           // Swagger UI 페이지
                             "/v3/api-docs/**",          // OpenAPI 문서
                             "/swagger-resources/**",    // Swagger 리소스
-                            "/webjars/**").permitAll();               // Swagger UI의 정적 리소스
+                            "/webjars/**", "/login/kakao", "/favicon.ico").permitAll();               // Swagger UI의 정적 리소스
                 })
 
                 // oauth2 login success Handler
-                .oauth2Login(customizer-> customizer.successHandler(kakaoLoginSuccessHandler)
+                .oauth2Login(customizer -> customizer.successHandler(kakaoLoginSuccessHandler)
                         .clientRegistrationRepository(clientRegistrationRepository()))
 
 
@@ -87,7 +87,7 @@ public class SecurityConfig {
         return ClientRegistration.withRegistrationId("kakao")
                 .clientId(kakaoProperties.getClientId())
                 .clientSecret(kakaoProperties.getClientSecret())
-                .scope("profile")
+                .scope("profile_nickname,profile_image")
                 .authorizationUri(kakaoProperties.getAuthenticationUri())
                 .tokenUri(kakaoProperties.getTokenUri())
                 .userInfoUri(kakaoProperties.getUserInfoUri())
