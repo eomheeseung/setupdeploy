@@ -3,6 +3,9 @@ package org.example.securitylogintest.oauth2.kakao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class KakaoProperties {
     private final String clientId;
@@ -13,6 +16,7 @@ public class KakaoProperties {
     private final String userInfoUri;
     private final String clientName;
     private final String authenticationGrantType;
+    private final List<String> scope = new ArrayList<>();
 
     public KakaoProperties(@Value("${security.oauth2.client.registration.kakao.client-id}") String clientId,
                            @Value("${security.oauth2.client.registration.kakao.client-secret}") String clientSecret,
@@ -20,7 +24,7 @@ public class KakaoProperties {
                            @Value("${security.oauth2.client.provider.kakao.authorization-uri}") String authenticationUri,
                            @Value("${security.oauth2.client.provider.kakao.token-uri}") String tokenUri,
                            @Value("${security.oauth2.client.provider.kakao.user-info-uri}") String userInfoUri,
-                           @Value("${security.oauth2.client.registration.kakao.client-name}")String clientName,
+                           @Value("${security.oauth2.client.registration.kakao.client-name}") String clientName,
                            @Value("${security.oauth2.client.registration.kakao.authorization-grant-type}") String authenticationGrantType) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;

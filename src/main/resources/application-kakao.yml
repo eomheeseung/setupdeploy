@@ -6,6 +6,7 @@ security:
           client-id: 1970a8420b6011c0ee50915ef06513c7
           client-secret: 6Zah6PAFco6Jm7SUBW1oTamoOI5S276f
           scope:
+            - account_email
             - profile_nickname
             - profile_image
           redirect-uri: http://localhost:8080/login/oauth2/code/kakao

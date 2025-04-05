@@ -3,8 +3,9 @@ package org.example.securitylogintest.security;
 import lombok.RequiredArgsConstructor;
 import org.example.securitylogintest.jwt.JWTAuthenticationFilter;
 import org.example.securitylogintest.jwt.JwtTokenProvider;
-import org.example.securitylogintest.oauth2.kakao.KakaoLoginSuccessHandler;
+import org.example.securitylogintest.oauth2.kakao.KakaoAuthenticationSuccessHandler;
 import org.example.securitylogintest.oauth2.kakao.KakaoProperties;
+import org.example.securitylogintest.oauth2.kakao.KakaoTokenResponseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,9 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
@@ -33,7 +37,7 @@ public class SecurityConfig {
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     private final KakaoProperties kakaoProperties;
-    private final KakaoLoginSuccessHandler kakaoLoginSuccessHandler;
+    private final KakaoAuthenticationSuccessHandler kakaoLoginSuccessHandler;
 
 
     @Bean
@@ -72,8 +76,8 @@ public class SecurityConfig {
 
                 // oauth2 login success Handler
                 .oauth2Login(customizer -> customizer.successHandler(kakaoLoginSuccessHandler)
-                        .clientRegistrationRepository(clientRegistrationRepository()))
-
+                        .clientRegistrationRepository(clientRegistrationRepository())
+                        .tokenEndpoint(custom-> custom.accessTokenResponseClient(new KakaoTokenResponseClient())))
 
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .userDetailsService(userDetailsService)
@@ -84,15 +88,21 @@ public class SecurityConfig {
     }
 
     private ClientRegistration kakaoClientRegistration() {
+        List<String> scopes = new ArrayList<>();
+        scopes.add("profile_nickname");
+        scopes.add("profile_image");
+        scopes.add("account_email");
+
         return ClientRegistration.withRegistrationId("kakao")
                 .clientId(kakaoProperties.getClientId())
                 .clientSecret(kakaoProperties.getClientSecret())
-                .scope("profile_nickname,profile_image")
+                .scope(scopes)
                 .authorizationUri(kakaoProperties.getAuthenticationUri())
                 .tokenUri(kakaoProperties.getTokenUri())
                 .userInfoUri(kakaoProperties.getUserInfoUri())
                 .redirectUri(kakaoProperties.getRedirectUri())
                 .clientName(kakaoProperties.getClientName())
+                .userNameAttributeName("id")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .build();
     }
